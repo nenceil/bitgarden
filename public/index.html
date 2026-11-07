@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit Garden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=10">
+    <script src="js/config.js"></script>
+    <script src="js/assets.js"></script>
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop data-asset="audio/bgm.mp3"></audio>
+
+    <!-- AUTH MODAL -->
+    <div id="auth-modal" class="item-modal auth-backdrop">
+        <div class="item-modal-content">
+            <div style="font-size:16px; margin-bottom:20px; font-weight:bold; color:#3e2723;">BIT GARDEN</div>
+
+            <div id="auth-forms">
+                <!-- Inputs -->
+                <input type="text" id="auth-username" placeholder="Username" maxlength="8" pattern="[a-zA-Z0-9]+"
+                    style="width:100%; margin-bottom:10px; padding:10px; box-sizing:border-box;">
+                <input type="email" id="auth-email" placeholder="Email"
+                    style="width:100%; margin-bottom:10px; padding:10px; box-sizing:border-box; display:none;">
+                <input type="password" id="auth-password" placeholder="Password"
+                    style="width:100%; margin-bottom:10px; padding:10px; box-sizing:border-box;">
+
+                <!-- Login Buttons -->
+                <div id="login-actions">
+                    <button class="action-btn" id="btn-login"
+                        style="background:#81c784; width:100%; margin-bottom:5px;">LOGIN</button>
+                    <div style="margin: 5px 0;">
+                        <span id="link-forgot"
+                            style="font-size:9px; cursor:pointer; color:#5d4037; text-decoration:underline;">Forgot
+                            Password?</span>
+                    </div>
+                    <div style="margin:10px; font-size:10px; color:#5d4037;">OR</div>
+                    <button class="action-btn" id="btn-to-register" style="background:#ffccbc; width:100%;">CREATE
+                        ACCOUNT</button>
+                </div>
+
+                <!-- Register Buttons -->
+                <div id="register-actions" style="display:none;">
+                    <button class="action-btn" id="btn-register"
+                        style="background:#ff8a65; width:100%; margin-bottom:5px;">REGISTER</button>
+                    <button class="action-btn" id="btn-to-login" style="background:#cfd8dc; width:100%;">BACK TO
+                        LOGIN</button>
+                </div>
+
+                <!-- Forgot Buttons -->
+                <div id="forgot-actions" style="display:none;">
+                    <button class="action-btn" id="btn-forgot-submit"
+                        style="background:#ba68c8; color:white; width:100%; margin-bottom:5px;">SEND RESET CODE</button>
+                    <button class="action-btn" id="btn-to-login-2" style="background:#cfd8dc; width:100%;">BACK</button>
+                </div>
+
+                <!-- Reset Password Buttons (Used with URL token) -->
+                <div id="reset-actions" style="display:none;">
+                    <div style="font-size:10px; margin-bottom:10px; color:#3e2723;">ENTER YOUR NEW PASSWORD:</div>
+                    <button class="action-btn" id="btn-reset-submit"
+                        style="background:#f44336; color:white; width:100%; margin-bottom:5px;">UPDATE PASSWORD</button>
+                    <button class="action-btn" id="btn-to-login-3"
+                        style="background:#cfd8dc; width:100%;">CANCEL</button>
+                </div>
+
+                <div style="margin-top:15px; border-top: 1px solid #a1887f; padding-top: 10px;">
+                    <button class="action-btn" id="btn-guest" style="background:#b3e5fc; width:100%; border:none;">PLAY
+                        AS GUEST</button>
+                </div>
+            </div>
+
+            <div id="auth-msg" style="margin-top:15px; font-size:11px; color:red; min-height: 20px; font-weight: bold;">
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <!-- HEADER -->
+        <div class="header">
+            <!-- Utility Row (Logout & Mute) -->
+            <div class="header-utils">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <button class="nav-btn utility-btn" id="btn-profile-header"
+                        style="background:#81c784;">PROFILE</button>
+                    <button class="nav-btn utility-btn" id="btn-logout-header"
+                        style="background:#ff8a65;">LOGOUT</button>
+                </div>
+                <div style="flex:1"></div>
+                <button class="nav-btn utility-btn" id="btn-mute">🔊</button>
+            </div>
+
+            <div class="header-content">
+                <!-- Logo Row -->
+                <div
+                    style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
+                    <img data-asset="img/logo.png" alt="Bit Garden" class="game-logo">
+                    <div id="weather-display-container" style="position: absolute; right: 0; bottom: 0;">
+                        <div class="weather-display" id="weather-info">
+                            <span>☀️</span> Clear
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="header-stats">
+                    <div class="user-name white-text shadow-text" id="header-user-name" style="cursor:pointer;"
+                        title="View Profile">FARMER</div>
+                    <div class="user-energy white-text shadow-text">
+                        <span id="energy-display" style="color: #ffeb3b;">100/100</span> ⚡
+                    </div>
+                    <div class="user-gold shadow-text">
+                        <span id="gold-display" style="color: #ffd700;">0</span> G
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- NAV -->
+        <div class="nav-bar">
+            <a href="#" class="nav-btn" id="nav-farm">FARM</a>
+            <a href="#" class="nav-btn" id="nav-shop">SHOP</a>
+            <a href="#" class="nav-btn" id="nav-inventory">ITEMS</a>
+            <a href="#" class="nav-btn" id="nav-town">MAP</a>
+            <a href="#" class="nav-btn" id="nav-quests">QUESTS</a>
+            <a href="#" class="nav-btn" id="nav-leaderboard">RANK</a>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main-content">
+            <!-- PROFILE VIEW -->
+            <div id="profile-view" style="display: none;">
+                <div class="location-title">FARMER PROFILE</div>
+
+                <div class="activity-view">
+                    <div class="activity-visual-box" style="position: relative;">
+                        <img id="prof-avatar-img"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                            style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--border-color); object-fit: cover; background: #eee;">
+                        <div id="prof-upload-btn"
+                            style="position: absolute; bottom: 0; right: 50%; transform: translateX(50px); background: var(--wood-dark); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"
+                            title="Change Avatar">📷</div>
+                        <input type="file" id="avatar-input" style="display: none;" accept="image/*">
+                    </div>
+
+                    <div class="profile-card">
+                        <div class="profile-stat">
+                            <span class="label">USERNAME:</span>
+                            <div style="text-align: right;">
+                                <div class="value" id="prof-username">-</div>
+                                <div id="prof-title" style="font-size: 8px; color: #795548; font-style: italic;">No
+                                    Title</div>
+                            </div>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="label">GOLD:</span>
+                            <span class="value" id="prof-gold">0 G</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="label">FISH CAUGHT:</span>
+                            <span class="value" id="prof-fish">0</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="label">ENERGY:</span>
+                            <span class="value" id="prof-energy">100/100</span>
+                        </div>
+                    </div>
+
+                    <div id="prof-title-selection"
+                        style="margin: 20px auto 0 auto; width: 100%; max-width: 300px; display: none; text-align: center;">
+                        <div style="font-size: 10px; font-weight: bold; margin-bottom: 10px;">TITLES:</div>
+                        <div id="title-list"
+                            style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.05); border: 2px solid var(--border-color); border-radius: 4px; text-align: left;">
+                            <!-- Titles will go here -->
+                        </div>
+                    </div>
+
+                    <div style="margin-top:20px;">
+                        <button class="action-btn" id="btn-prof-back"
+                            style="background:#bcaaa4; width:auto; padding: 10px 30px;">BACK</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FARM VIEW -->
+            <div id="farm-view">
+                <div class="location-title" id="farm-title">
+                    BIT GARDEN
+                </div>
+                <div id="farm-quick-actions" style="margin-bottom: 15px;"></div>
+                <div id="plot-container" class="plot-list">
+                    <!-- JS Populates this -->
+                    <div class="plot-card">Loading...</div>
+                </div>
+            </div>
+
+            <!-- PLOT DETAIL VIEW -->
+            <div id="plot-detail-view" style="display: none;">
+                <div class="location-title" id="plot-detail-title">
+                    PLOT #X
+                </div>
+
+                <!-- Big Visual -->
+                <div style="text-align: center; margin: 20px;">
+                    <div id="plot-detail-icon"
+                        style="font-size: 60px; background: #8d6e63; width: 100px; height: 100px; line-height: 100px; margin: 0 auto; border: 4px solid #3e2723; border-radius: 8px;">
+                        🟫
+                    </div>
+                    <div id="plot-detail-status" style="margin-top: 10px; font-size: 10px; color: #555;">
+                        Empty Plot
+                    </div>
+                </div>
+
+                <!-- Actions Grid -->
+                <div id="plot-actions-container"
+                    style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 0 15px;">
+                    <!-- Buttons injected by JS -->
+                </div>
+
+                <div style="text-align: center; margin-top:20px;">
+                    <button class="action-btn" id="btn-back-farm" style="background:#bcaaa4;">BACK TO FARM</button>
+                </div>
+            </div>
+
+
+            <!-- SHOP VIEW -->
+            <div id="shop-view" style="display: none;">
+                <div class="location-title">
+                    GENERAL STORE
+                </div>
+
+                <div id="shop-container" style="padding-bottom: 20px;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- INVENTORY VIEW -->
+            <div id="inventory-view" style="display: none;">
+                <div class="location-title">STORAGE</div>
+                <div id="inventory-list" class="shop-list">
+                    <!-- Items populated by JS -->
+                    <div class="plot-card">Empty...</div>
+                </div>
+            </div>
+
+            <!-- MAP / TOWN -->
+            <div id="town-container" style="display:none;">
+                <div class="location-title" style="background:#8d6e63;">EXPLORE BITGARDEN</div>
+
+                <div class="location-list" style="margin-top:20px;">
+
+                    <!-- RIVER CARD -->
+                    <div class="plot-card" style="background-color: #e3f2fd; border-color: #2196f3;">
+                        <div class="plot-icon" style="background:#42a5f5;">
+                            <img data-asset="img/map_river.png" class="item-img"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span class="fallback-emoji" style="display:none;">🌊</span>
+                        </div>
+                        <div class="plot-details">
+                            <div class="plot-name">Crystal River</div>
+                            <div class="plot-status">Bubbling waters filled with rare fish. Relax and cast your line.
+                            </div>
+                        </div>
+                        <div class="plot-action">
+                            <button class="action-btn" id="btn-travel-river"
+                                style="background:#90caf9; font-weight:bold;">GO</button>
+                        </div>
+                    </div>
+
+                    <!-- THICKET CARD -->
+                    <div class="plot-card" style="background-color: #e8f5e9; border-color: #4caf50;">
+                        <div class="plot-icon" style="background:#66bb6a;">
+                            <img data-asset="img/map_thicket.png" class="item-img"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span class="fallback-emoji" style="display:none;">🦗</span>
+                        </div>
+                        <div class="plot-details">
+                            <div class="plot-name">Green Thicket</div>
+                            <div class="plot-status">Lush shrubs where noisy insects hide. Perfect for gathering bait.
+                            </div>
+                        </div>
+                        <div class="plot-action">
+                            <button class="action-btn" id="btn-travel-thicket"
+                                style="background:#a5d6a7; font-weight:bold;">GO</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEADERBOARD VIEW -->
+            <div id="leaderboard-view" style="display: none;">
+                <div class="location-title">LEADERBOARD</div>
+
+                <div class="leaderboard-tabs">
+                    <button class="action-btn active" id="btn-lb-gold">GOLD</button>
+                    <button class="action-btn" id="btn-lb-fish">FISHING</button>
+                </div>
+
+                <div id="lb-gold-container" class="lb-list">
+                    <!-- Top Gold Players -->
+                </div>
+
+                <div id="lb-fish-container" class="lb-list" style="display:none;">
+                    <!-- Top Fishing Players -->
+                </div>
+            </div>
+
+            <!-- QUESTS VIEW -->
+            <div id="quests-view" style="display: none;">
+                <div class="location-title" style="background: #ffd54f; color: #5d4037;">DAILY QUESTS</div>
+
+                <div id="quest-list" class="location-list">
+                    <!-- Quests populated by JS -->
+                    <div class="plot-card">Loading quests...</div>
+                </div>
+
+                <div style="text-align: center; margin-top:20px;">
+                    <button class="action-btn" id="btn-quest-back"
+                        style="background:#bcaaa4; width:auto; padding: 10px 30px;">BACK</button>
+                </div>
+            </div>
+
+            <!-- River -->
+            <div id="river-container" style="display:none;">
+                <div class="location-title" style="background:#0288d1;">RUSHING RIVER</div>
+
+                <div class="activity-view">
+                    <div class="activity-visual-box" id="fishing-visual">
+                        <img data-asset="img/map_river.png" class="item-img-small"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="fallback-emoji" style="display:none;">🌊</span>
+                    </div>
+
+                    <div class="activity-status-card" id="fishing-status">
+                        Cast your line to start fishing...
+                    </div>
+
+                    <div id="bait-selector-container" class="bait-selector">
+                        <div class="selected-bait-box" id="bait-display" onclick="openBaitModal()">
+                            <div class="selected-bait-icon" id="bait-icon">🪱</div>
+                            <div class="selected-bait-name" id="bait-name">(None)</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-controls">
+                        <button class="action-btn" id="btn-cast-rod" style="background:#ffca28; color:#000;">CAST ROD
+                            (-2⚡)</button>
+                        <button class="action-btn" id="btn-pull-rod"
+                            style="display:none; background:#d32f2f; color:white;">PULL!</button>
+                    </div>
+
+                    <!-- Minigame -->
+                    <div id="fishing-minigame" style="display:none;">
+                        <div class="minigame-title">Sort Numbers (Low -> High)</div>
+                        <div id="fishing-numbers" style="display:flex; justify-content:center; gap:5px;"></div>
+                    </div>
+
+                    <!-- Choice -->
+                    <div id="fishing-choice"
+                        style="display:none; margin-top:15px; border-top: 1px solid #ccc; padding-top: 15px;">
+                        <div style="font-size: 10px; margin-bottom: 10px;">What will you do?</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="action-btn" id="btn-fish-sell" style="background:#fdd835;">SELL</button>
+                            <button class="action-btn" id="btn-fish-keep" style="background:#66bb6a;">KEEP</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; text-align:center;">
+                    <button class="action-btn" id="btn-return-town"
+                        style="background:#bcaaa4; width:auto; padding: 10px 20px;">BACK TO MAP</button>
+                </div>
+            </div>
+
+            <!-- THICKET -->
+            <div id="thicket-container" style="display:none;">
+                <div class="location-title" style="background:#2e7d32;">GREEN THICKET</div>
+
+                <div class="activity-view">
+                    <div class="activity-visual-box" id="thicket-visual">
+                        <img data-asset="img/map_thicket.png" class="item-img-small"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="fallback-emoji" style="display:none;">🦗</span>
+                    </div>
+
+                    <div class="activity-status-card" id="thicket-status">
+                        Search for bait among the leaves...
+                    </div>
+
+                    <div class="activity-controls">
+                        <button class="action-btn" id="btn-search-bait" onclick="searchBait()"
+                            style="background:#cddc39; color:#000; font-weight:bold;">SEARCH BUSH (-1⚡)</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; text-align:center;">
+                    <button class="action-btn" id="btn-return-town-2"
+                        style="background:#8d6e63; color:#fff; width:auto; padding: 10px 20px;">BACK TO MAP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEM DETAIL MODAL -->
+    <div id="item-modal" class="item-modal">
+        <div class="item-modal-content">
+            <button class="modal-close" onclick="closeItemModal()">X</button>
+            <div id="modal-item-icon" class="modal-item-icon"></div>
+            <div id="modal-item-name" class="modal-item-name">Item Name</div>
+            <div id="modal-item-desc" class="modal-item-desc">Item Description here...</div>
+            <div id="modal-item-price" class="modal-item-price">Price: 0 G</div>
+
+            <div id="modal-buy-controls" class="buy-controls">
+                <div class="qty-input-group">
+                    <button class="action-btn" style="width: 40px;" onclick="changeQty(-1)">-</button>
+                    <input type="number" id="buy-qty" class="qty-input" value="1" min="1" max="99">
+                    <button class="action-btn" style="width: 40px;" onclick="changeQty(1)">+</button>
+                </div>
+                <button class="action-btn" id="btn-modal-buy" style="background:#81c784;">BUY (Total: 0 G)</button>
+            </div>
+
+            <div id="modal-sell-controls" class="buy-controls" style="display:none;">
+                <button class="action-btn" id="btn-modal-sell" style="background:#ffcc80;">SELL ITEM</button>
+                <button class="action-btn" id="btn-modal-sell-all" style="background:#f44336; color:white;">SELL
+                    ALL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirm-modal" class="item-modal">
+        <div class="item-modal-content" style="max-width: 280px;">
+            <div id="confirm-modal-title" class="modal-item-name">ARE YOU SURE?</div>
+            <div id="confirm-modal-desc" class="modal-item-desc">This action cannot be undone.</div>
+            <div class="buy-controls" style="flex-direction: row; justify-content: center; gap: 10px;">
+                <button class="action-btn" id="btn-confirm-yes"
+                    style="background:#f44336; color:white; flex:1;">YES</button>
+                <button class="action-btn" id="btn-confirm-no" style="background:#bdbdbd; flex:1;"
+                    onclick="closeConfirmModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAIT SELECTION MODAL -->
+    <div id="bait-modal" class="item-modal">
+        <div class="item-modal-content">
+            <button class="modal-close" onclick="closeBaitModal()">X</button>
+            <div class="modal-item-name">SELECT BAIT</div>
+            <div id="bait-grid" class="bait-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SEED SELECTION MODAL -->
+    <div id="seed-modal" class="item-modal">
+        <div class="item-modal-content">
+            <button class="modal-close" onclick="closeSeedModal()">X</button>
+            <div class="modal-item-name">SELECT SEED</div>
+            <div id="seed-grid" class="bait-grid">
+                <!-- Populated by JS (reusing bait-grid class) -->
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION CONTAINER -->
+    <div id="notification-container"></div>
+
+    <!-- CHAT BOX -->
+    <div id="chat-container" class="chat-container">
+        <!-- Floating Button -->
+        <div id="chat-toggle-btn">
+            💬
+            <div id="chat-unread" class="unread-dot"></div>
+        </div>
+
+        <!-- Chat Box Window -->
+        <div id="chat-box" class="chat-box">
+            <div class="chat-header">
+                <span>World Chat</span>
+                <button class="chat-close" id="btn-close-chat">×</button>
+            </div>
+            <div id="chat-messages" class="chat-messages">
+                <!-- Messages populate here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Say something..." maxlength="200">
+                <button id="btn-send-chat">SEND</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="weather-overlay" class="weather-overlay"></div>
+    <div id="lightning-flash" class="lightning-flash"></div>
+    <script src="js/script.js?v=41"></script>
+</body>
+
+
+</html>
